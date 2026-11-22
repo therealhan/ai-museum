@@ -3,25 +3,84 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>公開版 LLM Wiki｜如果文物會說話：AI 智慧博物館</title>
+
 <style>
-:root{--ink:#1f2933;--muted:#65727e;--line:#e6e9e7;--paper:#fff;--bg:#f4f6f4;--accent:#28645d;--soft:#edf5f1}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;line-height:1.75}
-header{background:#fff;border-bottom:1px solid var(--line);padding:22px max(22px,calc((100% - 980px)/2))}
-header a{color:var(--accent);text-decoration:none}main{max-width:980px;margin:34px auto;padding:0 22px 60px}
-h1{font-size:clamp(28px,4vw,42px);line-height:1.25;margin:10px 0 12px}h2{font-size:24px;margin:34px 0 12px}h3{font-size:17px;margin:0 0 6px}
-p{color:#4d5a62}.eyebrow{font-size:12px;letter-spacing:.14em;color:var(--accent);font-weight:800}
-.intro,.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;margin:14px 0}
-.sources{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.card a{color:var(--accent);overflow-wrap:anywhere}.tag{font-size:12px;color:var(--accent);font-weight:700}
-ol,ul{padding-left:24px}li{margin:6px 0}.flow{background:var(--soft);border:1px solid #d8e8df;border-radius:14px;padding:18px;overflow-wrap:anywhere}
+:root{
+  --bg:#f1eadf;
+  --paper:#fbf8f1;
+  --paper2:#f6efe4;
+  --ink:#2f2923;
+  --muted:#76695d;
+  --line:#ddd0bf;
+  --accent:#8f7551;
+  --accent-dark:#6d573c;
+  --soft:#f3ecdf;
+  --shadow:0 20px 44px rgba(70,50,30,.08);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at top left, rgba(255,255,255,.55), transparent 24%),
+    linear-gradient(180deg,#eee4d6 0%, #f4eee3 36%, #f1eadf 100%);
+  color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  line-height:1.8
+}
+header{
+  background:rgba(251,248,241,.88);
+  border-bottom:1px solid var(--line);
+  padding:18px max(22px,calc((100% - 1060px)/2));
+  position:sticky;top:0;z-index:10;backdrop-filter:blur(6px)
+}
+header a{color:var(--accent-dark);text-decoration:none;font-weight:700}
+main{max-width:1060px;margin:36px auto;padding:0 22px 70px}
+h1,h2,h3{font-family:Georgia,"Times New Roman","Noto Serif TC",serif;color:#33271d}
+h1{font-size:clamp(32px,4vw,50px);line-height:1.2;margin:10px 0 14px}
+h2{
+  font-size:28px;margin:40px 0 14px;padding-bottom:10px;
+  border-bottom:1px solid #e6dccc
+}
+h3{font-size:18px;margin:0 0 6px}
+p{color:#5b5147}
+.eyebrow{font-size:12px;letter-spacing:.18em;color:var(--accent-dark);font-weight:800}
+.intro,.card,.banner{
+  background:linear-gradient(180deg,#fffdfa 0%, #faf6ef 100%);
+  border:1px solid var(--line);border-radius:22px;padding:24px;box-shadow:var(--shadow)
+}
+.banner{position:relative;overflow:hidden;margin-bottom:18px}
+.banner:after{
+  content:"";position:absolute;right:-40px;top:-40px;width:180px;height:180px;border-radius:50%;
+  border:1px solid rgba(143,117,81,.15)
+}
+.banner .quote{
+  margin-top:10px;font-size:18px;font-family:Georgia,"Times New Roman","Noto Serif TC",serif;color:#47392b
+}
+.sources{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.card{padding:20px}
+.card a{color:var(--accent-dark);overflow-wrap:anywhere;text-decoration:none}
+.card a:hover{text-decoration:underline}
+.tag{font-size:12px;color:var(--accent-dark);font-weight:800;letter-spacing:.08em}
+ol,ul{padding-left:24px}
+li{margin:6px 0}
+.flow{
+  background:linear-gradient(180deg,#fffdfa,#f6efe5);
+  border:1px solid #dfd1bf;border-radius:18px;padding:20px;overflow-wrap:anywhere
+}
+.meta-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}
+.meta-item{background:#f8f2e8;border:1px solid #e5d7c5;border-radius:16px;padding:14px}
 footer{border-top:1px solid var(--line);padding:22px;color:var(--muted);text-align:center;font-size:13px}
-@media(max-width:680px){.sources{grid-template-columns:1fr}main{margin-top:20px}}
-</style></head>
+@media(max-width:760px){
+  .sources,.meta-grid{grid-template-columns:1fr}
+  main{margin-top:22px}
+}
+</style>
+</head>
 <body>
 <header><a href="index.html">← 回到 HTML 教學簡報</a></header>
 <main>
 <div class="eyebrow">PUBLIC KNOWLEDGE BASE / LLM WIKI EXPORT</div>
-<h1>如果文物會說話：AI 智慧博物館</h1>
+<div class="banner"><h1>如果文物會說話：AI 智慧博物館</h1><p class="quote">「為了大眾而存在」—— 以博物館公共精神為核心，設計一個懂得查證、懂得承認未知的 AI 導覽員。</p></div>
 <div class="intro">
 <p><b>專題定位</b></p>
 <p>本專題探討如何運用大型語言模型（LLM）與檢索增強生成（RAG），打造一位能根據館方知識回答問題、提供來源並承認知識不足的 AI 博物館導覽員。</p>

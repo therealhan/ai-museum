@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f8f6">
+<title>如果文物會說話｜AI 智慧博物館</title>
+<style>
+:root{
+  --ink:#1f2933;--muted:#65727e;--line:#e6e9e7;--paper:#fff;--bg:#f4f6f4;
+  --accent:#28645d;--accent2:#dcebe6;--gold:#b18a45;--goldbg:#f6f0e5;
+  --blue:#55738a;--bluebg:#eaf0f4;--rose:#9b6862;--rosebg:#f5eae8;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:Inter,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}
+body{display:flex;flex-direction:column;align-items:center;padding:24px 18px 18px}
+header{width:min(1120px,100%);display:flex;align-items:center;justify-content:space-between;margin:0 auto 14px;color:var(--muted);font-size:13px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:700;letter-spacing:.04em;color:#34443f}
+.brand-mark{width:25px;height:25px;border:1px solid #cbd8d2;border-radius:8px;display:grid;place-items:center;color:var(--accent);background:#fff}
+.header-note{font-size:12px}
+.deck{width:min(1120px,100%);position:relative}
+.slide{
+  display:none;min-height:min(690px,calc(100vh - 155px));aspect-ratio:16/9;
+  background:var(--paper);border:1px solid var(--line);border-radius:22px;
+  box-shadow:0 18px 55px rgba(33,48,42,.07);padding:clamp(26px,5vw,64px);
+  overflow:auto;position:relative;flex-direction:column;justify-content:center;
+}
+.slide.active{display:flex}
+.slide:after{content:"";position:absolute;right:0;top:0;width:8px;height:100%;background:linear-gradient(var(--accent2),transparent 75%);opacity:.75}
+.kicker{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:800;margin-bottom:18px}
+h1{font-size:clamp(34px,5vw,64px);line-height:1.12;letter-spacing:-.04em;margin:0 0 18px;max-width:900px}
+h2{font-size:clamp(27px,3.2vw,42px);line-height:1.2;letter-spacing:-.03em;margin:0 0 16px}
+h3{font-size:17px;margin:0 0 9px}
+p{font-size:clamp(15px,1.6vw,19px);line-height:1.75;color:#4d5a62;margin:8px 0}
+.lead{font-size:clamp(18px,2vw,24px);line-height:1.65;max-width:800px;color:#48565d}
+.small{font-size:13px!important;line-height:1.6!important;color:var(--muted)!important}
+.foot{position:absolute;bottom:22px;left:clamp(26px,5vw,64px);font-size:11px;color:#9aa3a5;letter-spacing:.06em}
+.hero-mark{width:92px;height:92px;border-radius:28px;background:var(--accent2);display:grid;place-items:center;font-size:42px;margin-bottom:28px}
+.hero-rule{height:3px;width:86px;background:var(--accent);border-radius:4px;margin:24px 0}
+.pill{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:99px;padding:7px 12px;font-size:12px;color:#5b6b68;background:#fff;margin:4px 5px 4px 0}
+.pill.green{background:var(--accent2);border-color:#c8ded5;color:#285e55}
+.pill.gold{background:var(--goldbg);border-color:#e9dfcb;color:#8b6b32}
+.pill.blue{background:var(--bluebg);border-color:#d8e2e9;color:#4b687e}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}
+.grid.two{grid-template-columns:repeat(2,1fr)}
+.card{border:1px solid var(--line);border-radius:16px;padding:19px;background:#fff;min-width:0}
+.card.tint{background:#f8faf8}
+.card.green{background:#f2f8f5;border-color:#d9e8e1}
+.card.gold{background:#fbf8f1;border-color:#eee4d0}
+.card.blue{background:#f4f7f9;border-color:#dfe7ec}
+.card p{font-size:14px;line-height:1.65;margin:5px 0 0}
+.number{font-size:12px;color:var(--accent);font-weight:800;letter-spacing:.08em;margin-bottom:10px}
+.bigquote{font-size:clamp(23px,3vw,36px);line-height:1.45;letter-spacing:-.02em;color:#34423f;max-width:900px}
+.split{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:center}
+.stat{font-size:clamp(34px,5vw,58px);font-weight:800;letter-spacing:-.05em;color:var(--accent)}
+.flow{display:flex;align-items:stretch;gap:9px;margin:26px 0;flex-wrap:wrap}
+.step{flex:1;min-width:112px;padding:16px 12px;border:1px solid var(--line);border-radius:14px;background:#fbfcfb;text-align:center}
+.step b{display:block;font-size:14px;margin:7px 0 4px}
+.step span{font-size:12px;color:var(--muted);line-height:1.5;display:block}
+.arrow{align-self:center;color:#9eaaa4;font-size:21px}
+.diagram{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:22px}
+.lane{border:1px solid var(--line);border-radius:17px;padding:20px;background:#fbfcfb}
+.lane-title{font-size:12px;font-weight:800;color:var(--accent);letter-spacing:.1em;margin-bottom:14px}
+.node{border:1px solid #dfe7e2;background:#fff;border-radius:11px;padding:11px 13px;text-align:center;font-size:13px;margin:8px auto;max-width:280px}
+.node.dark{background:#edf4f0;border-color:#d4e3db;font-weight:700;color:#315a50}
+.down{text-align:center;color:#a6b2ab;line-height:1}
+.checks{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:24px}
+.check{border-top:3px solid var(--accent);padding:15px 14px;background:#f8faf8;border-radius:0 0 13px 13px}
+.check:nth-child(2){border-color:var(--gold)}
+.check:nth-child(3){border-color:var(--blue)}
+.check p{font-size:14px}
+table{width:100%;border-collapse:collapse;margin-top:15px;font-size:13px}
+th{text-align:left;background:#f3f6f4;color:#4c5b55;font-weight:700}
+th,td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+td{color:#4f5b61;line-height:1.55}
+.status{font-weight:800;color:var(--accent)}
+.warn{background:var(--goldbg);border:1px solid #ecdfc5;border-radius:13px;padding:14px 16px;color:#755d2e;font-size:14px;line-height:1.65;margin-top:15px}
+.note{background:var(--bluebg);border:1px solid #dbe6ed;border-radius:13px;padding:14px 16px;color:#4b6474;font-size:14px;line-height:1.65;margin-top:15px}
+.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0}
+.quiz-options button{border:1px solid var(--line);border-radius:12px;background:#fff;padding:15px;text-align:left;font:inherit;color:var(--ink);cursor:pointer}
+.quiz-options button:hover{border-color:var(--accent);background:#f4faf7}
+.quiz-options button:focus{outline:3px solid #c9e0d7}
+.feedback{min-height:48px;border-radius:12px;padding:13px 15px;background:#f6f7f6;color:var(--muted);font-size:14px;line-height:1.6}
+.source-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.source{border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.source b{font-size:13px;display:block;margin-bottom:4px}
+.source a{font-size:12px;color:var(--accent);text-decoration:none;overflow-wrap:anywhere}
+.source a:hover{text-decoration:underline}
+.controls{width:min(1120px,100%);display:flex;align-items:center;gap:12px;padding:14px 2px 0}
+.navbtn{border:1px solid #dce3df;background:#fff;border-radius:99px;padding:10px 17px;font-size:13px;color:#34423f;cursor:pointer}
+.navbtn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.navbtn:disabled{opacity:.35;cursor:not-allowed}
+.progress-wrap{flex:1;height:4px;border-radius:9px;background:#e3e9e5;overflow:hidden}
+.progress{height:100%;width:0;background:var(--accent);transition:width .2s}
+.counter{font-size:12px;color:var(--muted);min-width:50px;text-align:right;font-variant-numeric:tabular-nums}
+.dots{display:flex;gap:5px;align-items:center}
+.dot{width:6px;height:6px;border-radius:50%;background:#cbd4cf;border:0;padding:0;cursor:pointer}
+.dot.active{background:var(--accent);width:18px;border-radius:9px}
+a{color:var(--accent)}
+@media(max-width:760px){
+ body{padding:10px}
+ header{padding:3px 5px}
+ .header-note{display:none}
+ .slide{aspect-ratio:auto;min-height:calc(100vh - 130px);padding:27px 22px 48px;border-radius:17px}
+ .grid,.grid.two,.diagram,.checks,.split,.source-list{grid-template-columns:1fr}
+ .flow{display:grid;grid-template-columns:1fr}
+ .arrow{transform:rotate(90deg);text-align:center}
+ .quiz-options{grid-template-columns:1fr}
+ .foot{bottom:13px;left:22px}
+ .dots{display:none}
+ table{font-size:12px}
+ th,td{padding:8px 7px}
+}
+@media print{
+ body{padding:0;background:#fff}
+ header,.controls{display:none!important}
+ .deck{width:100%}
+ .slide,.slide.active{display:flex!important;min-height:0;height:100vh;aspect-ratio:16/9;border:0;border-radius:0;box-shadow:none;page-break-after:always;break-after:page}
+ .foot{bottom:12px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><span class="brand-mark">文</span> THE TALKING MUSEUM</div>
+  <div class="header-note">教學型 HTML 簡報｜簡約白色系｜<a href="wiki.html">閱讀公開版 Wiki</a></div>
+</header>
+<main class="deck" id="deck" aria-live="polite">
+
+<section class="slide active">
+  <div class="hero-mark">🏺</div>
+  <div class="kicker">A KNOWLEDGE-POWERED MUSEUM</div>
+  <h1>如果文物會說話</h1>
+  <p class="lead">打造一位懂歷史、會找資料，也知道自己不知道什麼的 AI 博物館導覽員。</p>
+  <div class="hero-rule"></div>
+  <span class="pill green">LLM × RAG × 文化資產</span><span class="pill">新手入門</span>
+  <p class="small" style="margin-top:24px">從一個有趣的問題，認識 AI 如何把知識變成可信的導覽體驗。</p>
+  <div class="foot">01 / 15　THE TALKING MUSEUM</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">01 — THE QUESTION</div>
+  <h2>想像你站在一件千年文物前</h2>
+  <p class="bigquote">「你曾經是誰？被誰使用？又為什麼來到這座博物館？」</p>
+  <div class="grid two">
+    <div class="card tint"><div class="number">WITHOUT AI</div><h3>傳統標籤</h3><p>一段固定文字，告訴你名稱、年代、材質與背景。想問更多，可能要找導覽員。</p></div>
+    <div class="card green"><div class="number">WITH AI GUIDE</div><h3>對話式導覽</h3><p>你可以追問、換個方式理解，或要求兒童版解說；系統再去查找館方知識。</p></div>
+  </div>
+  <div class="note">重要前提：AI 可以用「文物第一人稱」增加趣味，但想像性敘事必須與可考證史實分開標示。</div>
+  <div class="foot">02 / 15　從使用情境開始</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">02 — THE CAST</div>
+  <h2>一位 AI 導覽員，需要哪些角色？</h2>
+  <p>把它想成一個小型團隊，而不是一個無所不知的機器人。</p>
+  <div class="grid">
+    <div class="card green"><div class="number">01 / 知識庫</div><h3>博物館的資料櫃</h3><p>藏品紀錄、年代、材質、研究說明、展覽文字與來源。</p></div>
+    <div class="card blue"><div class="number">02 / Retriever</div><h3>會找資料的研究助理</h3><p>根據觀眾問題，從知識庫找出相關段落。</p></div>
+    <div class="card tint"><div class="number">03 / LLM</div><h3>會解說的導覽員</h3><p>把專業資料轉成清楚、自然、符合觀眾程度的語言。</p></div>
+    <div class="card gold"><div class="number">04 / Verifier</div><h3>事實查核員</h3><p>檢查答案是否有證據、是否離題、是否把推測說成事實。</p></div>
+    <div class="card"><div class="number">05 / CURATOR</div><h3>策展與專業人員</h3><p>處理爭議、敏感或高重要性的內容，保留人工治理。</p></div>
+    <div class="card"><div class="number">06 / VISITOR</div><h3>參觀者</h3><p>提出問題、追問、回饋，讓導覽更貼近真實需求。</p></div>
+  </div>
+  <div class="foot">03 / 15　AI 導覽的角色分工</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">03 — WHAT IS AN LLM?</div>
+  <h2>LLM：很會說話的引擎</h2>
+  <div class="split">
+    <div>
+      <p>大型語言模型（Large Language Model）從大量文字中學習語言模式，根據上下文預測並生成接下來的 token。</p>
+      <p>它擅長整理、改寫、摘要與對話，但流暢不代表每個細節都正確。</p>
+      <span class="pill green">擅長語言表達</span><span class="pill gold">不等於資料庫</span>
+    </div>
+    <div class="card tint">
+      <div class="number">簡化示意</div>
+      <p style="font-size:17px;color:#34423f;font-weight:700">「這件文物的用途可能是……」</p>
+      <div class="hero-rule"></div>
+      <p class="small">模型依據上下文計算可能的下一段文字。若沒有可靠證據，它仍可能生成聽起來合理的內容。</p>
+    </div>
+  </div>
+  <div class="foot">04 / 15　LLM 基礎概念</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">04 — WHY EXTERNAL KNOWLEDGE?</div>
+  <h2>為什麼不能只靠模型「記憶」？</h2>
+  <div class="grid two">
+    <div class="card tint"><div class="number">MODEL MEMORY</div><h3>模型內部知識</h3><p>知識來自訓練過程，未必能即時更新，也不容易逐條指出某個答案的出處。</p></div>
+    <div class="card green"><div class="number">EXTERNAL KNOWLEDGE</div><h3>外部知識庫</h3><p>館方可維護藏品紀錄與研究文件，系統能檢索、更新並回頭檢查引用內容。</p></div>
+  </div>
+  <p class="bigquote" style="margin-top:25px">讓模型負責「說清楚」，讓知識庫負責「提供根據」。</p>
+  <p class="small">研究基礎：Lewis et al.（2020）提出以外部可檢索記憶補充生成模型的 RAG 架構。[S02]</p>
+  <div class="foot">05 / 15　從模型記憶走向可檢索知識</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">05 — RAG IN ONE MINUTE</div>
+  <h2>RAG：先找證據，再生成答案</h2>
+  <p>Retrieval-Augmented Generation，中文常譯為「檢索增強生成」。</p>
+  <div class="flow">
+    <div class="step"><div>❓</div><b>提問</b><span>「這件陶器有何用途？」</span></div>
+    <div class="arrow">→</div>
+    <div class="step"><div>🔎</div><b>檢索</b><span>搜尋相關館藏紀錄</span></div>
+    <div class="arrow">→</div>
+    <div class="step"><div>📄</div><b>取回證據</b><span>選出相關段落</span></div>
+    <div class="arrow">→</div>
+    <div class="step"><div>✍️</div><b>生成</b><span>LLM 組織易懂解說</span></div>
+    <div class="arrow">→</div>
+    <div class="step"><div>✓</div><b>檢查</b><span>確認答案有根據</span></div>
+  </div>
+  <div class="note">RAG 能讓答案更貼近外部資料，但前提是「找對資料」；如果取回的內容不相關，回答仍可能離題或錯誤。[S03]</div>
+  <div class="foot">06 / 15　RAG 核心流程</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">06 — HOW SEARCH WORKS</div>
+  <h2>文件如何變成「找得到」的知識？</h2>
+  <div class="grid two">
+    <div class="card">
+      <div class="number">STEP 1</div><h3>切塊 Chunking</h3><p>把長篇藏品紀錄切成較小段落，避免一次檢索整本文件。</p>
+      <div class="number" style="margin-top:18px">STEP 2</div><h3>Embedding</h3><p>把文字轉成數值向量，讓系統能比較語意上的相似程度。</p>
+    </div>
+    <div class="card green">
+      <div class="number">STEP 3</div><h3>向量資料庫</h3><p>保存向量及文件中繼資料，供相似度搜尋使用。</p>
+      <div class="number" style="margin-top:18px">STEP 4</div><h3>重排序 Reranking</h3><p>從候選段落中重新評分，優先選出真正切題的內容。</p>
+    </div>
+  </div>
+  <p class="small">Embedding 不是摘要；它是內容的數值表示。實務上可結合關鍵字搜尋與語意搜尋（Hybrid Search）。[S03][S04]</p>
+  <div class="foot">07 / 15　檢索背後的技術</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">07 — SYSTEM ARCHITECTURE</div>
+  <h2>系統有兩條路：資料進來、問題出去</h2>
+  <div class="diagram">
+    <div class="lane">
+      <div class="lane-title">A / KNOWLEDGE INGESTION</div>
+      <div class="node">館藏資料、研究文件、展覽文字</div><div class="down">↓</div>
+      <div class="node">清理、切塊、補上來源資訊</div><div class="down">↓</div>
+      <div class="node dark">Embedding 向量化</div><div class="down">↓</div>
+      <div class="node dark">向量資料庫</div>
+      <p class="small">資料更新時執行；負責建置可搜尋的知識。</p>
+    </div>
+    <div class="lane">
+      <div class="lane-title">B / QUESTION SERVING</div>
+      <div class="node">觀眾提問</div><div class="down">↓</div>
+      <div class="node">檢索相關知識片段</div><div class="down">↓</div>
+      <div class="node dark">LLM 根據證據生成</div><div class="down">↓</div>
+      <div class="node dark">來源與安全檢查 → 回答</div>
+      <p class="small">每次提問時執行；負責即時服務。</p>
+    </div>
+  </div>
+  <p class="small">這種「Embedding 子系統＋Serving 子系統」的分工，可在 Google Cloud 的 RAG 參考架構中看到。[S04]</p>
+  <div class="foot">08 / 15　RAG 的系統分工</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">08 — TRUST BY DESIGN</div>
+  <h2>可信回答，至少要過三道門</h2>
+  <div class="checks">
+    <div class="check"><div class="number">GATE 01</div><h3>有沒有證據？</h3><p>每個關鍵事實能否回到館方紀錄或可信來源？</p></div>
+    <div class="check"><div class="number">GATE 02</div><h3>找對資料了嗎？</h3><p>檢索段落是否屬於這件文物，而不是另一件相似藏品？</p></div>
+    <div class="check"><div class="number">GATE 03</div><h3>有沒有超譯？</h3><p>是否把推測說成定論，或補上來源沒有記載的故事？</p></div>
+  </div>
+  <div class="warn"><b>錯誤示範：</b>「RAG 可以完全避免 AI 幻覺。」<br><b>較準確說法：</b>「RAG 可用外部證據改善回答的依據與可追溯性，但仍可能因檢索或生成錯誤而產生幻覺。」[S03][S05]</div>
+  <div class="foot">09 / 15　可信度不是單靠模型能力</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">09 — MUSEUM ETHICS</div>
+  <h2>博物館的 AI，不只要正確，也要尊重文化</h2>
+  <div class="grid two">
+    <div class="card green"><div class="number">ICOM｜博物館使命</div><h3>教育、反思與知識分享</h3><p>博物館研究、保存、詮釋與展示文化遺產；也應重視可及性、包容性、倫理與社群參與。[S01]</p></div>
+    <div class="card blue"><div class="number">UNESCO｜AI 倫理</div><h3>文化多樣性與參與</h3><p>AI 可協助保存、理解與推廣文化資產，但應尊重文化多樣性，並採取參與式方法。[S06]</p></div>
+  </div>
+  <p class="lead" style="margin-top:22px">AI 可以幫助文化被更多人看見，但不能替文化社群決定文化代表什麼。</p>
+  <div class="foot">10 / 15　科技與文化責任</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">10 — LOOP / GRAPH</div>
+  <h2>讓錯誤有機會被抓到：Loop / Graph</h2>
+  <div class="flow" style="margin-bottom:14px">
+    <div class="step"><b>Ingest</b><span>取得資料</span></div><div class="arrow">→</div>
+    <div class="step"><b>Normalize</b><span>摘要與分類</span></div><div class="arrow">→</div>
+    <div class="step"><b>Query Wiki</b><span>查詢知識</span></div><div class="arrow">→</div>
+    <div class="step"><b>Claim Ledger</b><span>主張對證據</span></div><div class="arrow">→</div>
+    <div class="step"><b>Generate</b><span>產生簡報</span></div>
+  </div>
+  <div class="card gold" style="margin-top:8px">
+    <div class="number">QA GATE</div>
+    <p style="color:#5d4e32"><b>檢查來源、事實、相關性、教學連貫與 HTML 功能。</b>通過 → 輸出；未通過 → 回到對應節點重新查詢或改寫。</p>
+  </div>
+  <p class="small">重複執行的是查詢、證據整理與受影響頁面的重生；不需要每次錯誤都重做整份簡報。詳細 Graph 與檢查條件見隨附 Workflow_Graph.mmd。</p>
+  <div class="foot">11 / 15　流程設計</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">11 — TEST RUN</div>
+  <h2>一次實際執行：Wiki 能否在資料不足時守住界線？</h2>
+  <div class="card tint" style="margin-top:10px">
+    <div class="number">實際提問</div>
+    <p style="font-size:16px;color:#34423f;font-weight:700">「如果博物館 AI 導覽員找不到文物用途的可靠資料，應該如何回答參觀者？請根據 Wiki 的資料回答，並列出參考來源。」</p>
+  </div>
+  <div class="grid two">
+    <div class="card green">
+      <div class="number">查詢結果</div>
+      <h3>明確承認資料不足</h3>
+      <p>不自行推測或編造用途；只陳述有來源支持的資訊，區分事實與推測，必要時轉介館員或策展人。</p>
+    </div>
+    <div class="card blue">
+      <div class="number">Wiki 引用</div>
+      <h3>K01、S03、S05、S06、S07</h3>
+      <p>分別支持知識整合、RAG 檢索相關性、幻覺風險、文化倫理與未知問題的處理方式。</p>
+    </div>
+  </div>
+  <div class="note"><b>檢查結果：通過。</b> 本次依實際 Wiki 對話與使用者提供的兩張截圖整理，確認回答有列出 Wiki 來源，且沒有自行編造文物用途。這是一次手動查詢測試，不宣稱已部署自動化向量資料庫。</div>
+  <div class="foot">12 / 15　實際執行紀錄</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">12 — REFLECTION</div>
+  <h2>最容易出錯的，不一定是最後一步</h2>
+  <p class="bigquote">真正的風險，常發生在「把有條件的研究結論，改寫成太肯定的簡報句子」。</p>
+  <div class="grid two">
+    <div class="card tint"><div class="number">原本流程</div><h3>最後才檢查</h3><p>先整理、寫簡報，最後才檢查事實。容易發現太晚，導致整頁重寫。</p></div>
+    <div class="card green"><div class="number">調整後流程</div><h3>先做 Claim Ledger</h3><p>在 Wiki Query 後就建立「主張—來源—限制」對照表；沒有證據的主張先不進簡報。</p></div>
+  </div>
+  <div class="warn">本次修正：把檢查往前移到「Query Wiki → Claim Ledger」，最後的 QA Gate 仍保留。這樣能在生成簡報前先抓出過度簡化與來源不足。</div>
+  <div class="foot">13 / 15　反思與流程修正</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">13 — QUICK CHECK</div>
+  <h2>小測驗：RAG 真的能消除幻覺嗎？</h2>
+  <p>選出最準確的說法。</p>
+  <div class="quiz-options">
+    <button type="button" data-answer="wrong">A. 可以，只要有向量資料庫就不會錯。</button>
+    <button type="button" data-answer="right">B. 不保證；它能提供外部證據，但仍需檢查檢索與生成。</button>
+    <button type="button" data-answer="wrong">C. 不行，RAG 只是把答案變長。</button>
+    <button type="button" data-answer="wrong">D. 只有模型參數量夠大才不會幻覺。</button>
+  </div>
+  <div class="feedback" id="quiz-feedback" role="status">點選一個選項，看看你是否抓到今天最重要的觀念。</div>
+  <div class="foot">14 / 15　互動小測驗</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">14 — TAKEAWAY & SOURCES</div>
+  <h2>讓文物開口，先讓證據說話</h2>
+  <p class="lead">AI 博物館導覽的價值，不只是能對話，而是能把可信的知識轉成更多人理解得了的故事。</p>
+  <div class="hero-rule"></div>
+  <div class="source-list">
+    <div class="source"><b>[S01] ICOM｜博物館定義（2022）</b><a href="https://icom.museum/en/news/icom-approves-a-new-museum-definition/" target="_blank" rel="noopener">icom.museum</a></div>
+    <div class="source"><b>[S02] Lewis et al.｜RAG 原始研究（2020）</b><a href="https://arxiv.org/abs/2005.11401" target="_blank" rel="noopener">arxiv.org/abs/2005.11401</a></div>
+    <div class="source"><b>[S03] Google Cloud｜RAG 概念</b><a href="https://cloud.google.com/use-cases/retrieval-augmented-generation" target="_blank" rel="noopener">cloud.google.com</a></div>
+    <div class="source"><b>[S04] Google Cloud｜RAG 參考架構</b><a href="https://docs.cloud.google.com/architecture/rag-capable-gen-ai-app-using-gke" target="_blank" rel="noopener">docs.cloud.google.com</a></div>
+    <div class="source"><b>[S05] NIST｜生成式 AI 風險（2024）</b><a href="https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence" target="_blank" rel="noopener">nist.gov</a></div>
+    <div class="source"><b>[S06] UNESCO｜AI 倫理建議（2021）</b><a href="https://www.unesco.org/en/legal-affairs/recommendation-ethics-artificial-intelligence" target="_blank" rel="noopener">unesco.org</a></div>
+    <div class="source"><b>[S07] Tue et al.｜對話式博物館導覽（2026）</b><a href="https://www.sciencedirect.com/science/article/pii/S2212054826000925" target="_blank" rel="noopener">ScienceDirect</a></div>
+  </div>
+  <p class="small" style="margin-top:18px">本網站另提供公開版 Wiki 摘要與七篇來源整理，供外部讀者查閱。研究案例 S07 的整理依可取得摘要撰寫，並保留其 22 人探索性研究的限制。</p>
+  <div class="foot">15 / 15　THE TALKING MUSEUM</div>
+</section>
+</main>
+
+<div class="controls">
+  <button class="navbtn" id="prev" type="button" aria-label="上一頁">← 上一頁</button>
+  <div class="progress-wrap" aria-label="簡報進度"><div class="progress" id="progress"></div></div>
+  <div class="dots" id="dots" aria-label="選擇投影片"></div>
+  <div class="counter" id="counter">01 / 15</div>
+  <button class="navbtn primary" id="next" type="button" aria-label="下一頁">下一頁 →</button>
+</div>
+<script>
+(() => {
+  const slides = [...document.querySelectorAll(".slide")];
+  const prev = document.getElementById("prev");
+  const next = document.getElementById("next");
+  const counter = document.getElementById("counter");
+  const progress = document.getElementById("progress");
+  const dots = document.getElementById("dots");
+  let index = 0;
+  slides.forEach((_, i) => {
+    const b = document.createElement("button");
+    b.className = "dot";
+    b.type = "button";
+    b.setAttribute("aria-label", `前往第 ${i+1} 頁`);
+    b.addEventListener("click", () => show(i));
+    dots.appendChild(b);
+  });
+  const dotButtons = [...dots.children];
+  function show(i) {
+    index = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach((s, n) => s.classList.toggle("active", n === index));
+    dotButtons.forEach((d, n) => d.classList.toggle("active", n === index));
+    prev.disabled = index === 0;
+    next.disabled = index === slides.length - 1;
+    counter.textContent = `${String(index+1).padStart(2,"0")} / ${String(slides.length).padStart(2,"0")}`;
+    progress.style.width = `${((index+1)/slides.length)*100}%`;
+  }
+  prev.addEventListener("click", () => show(index-1));
+  next.addEventListener("click", () => show(index+1));
+  document.addEventListener("keydown", e => {
+    if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); show(index+1); }
+    if (e.key === "ArrowLeft") { e.preventDefault(); show(index-1); }
+    if (e.key === "Home") show(0);
+    if (e.key === "End") show(slides.length-1);
+  });
+  document.querySelectorAll(".quiz-options button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const box = document.getElementById("quiz-feedback");
+      if (btn.dataset.answer === "right") {
+        box.textContent = "答對了！RAG 提供外部資料作為依據，但檢索可能不相關、來源可能不完整，生成也可能偏離證據。可信度仍需要檢查與人工治理。";
+        box.style.background = "#edf6f1"; box.style.color = "#285e55";
+      } else {
+        box.textContent = "再想一下：RAG 是「增加外部證據」，不是「保證模型永遠正確」。請選擇提到檢索與生成仍需檢查的選項。";
+        box.style.background = "#f8f1e6"; box.style.color = "#755d2e";
+      }
+    });
+  });
+  show(0);
+})();
+</script>
+</body>
+</html>

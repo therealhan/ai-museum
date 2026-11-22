@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>公開版 LLM Wiki｜如果文物會說話：AI 智慧博物館</title>
+<style>
+:root{--ink:#1f2933;--muted:#65727e;--line:#e6e9e7;--paper:#fff;--bg:#f4f6f4;--accent:#28645d;--soft:#edf5f1}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;line-height:1.75}
+header{background:#fff;border-bottom:1px solid var(--line);padding:22px max(22px,calc((100% - 980px)/2))}
+header a{color:var(--accent);text-decoration:none}main{max-width:980px;margin:34px auto;padding:0 22px 60px}
+h1{font-size:clamp(28px,4vw,42px);line-height:1.25;margin:10px 0 12px}h2{font-size:24px;margin:34px 0 12px}h3{font-size:17px;margin:0 0 6px}
+p{color:#4d5a62}.eyebrow{font-size:12px;letter-spacing:.14em;color:var(--accent);font-weight:800}
+.intro,.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;margin:14px 0}
+.sources{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.card a{color:var(--accent);overflow-wrap:anywhere}.tag{font-size:12px;color:var(--accent);font-weight:700}
+ol,ul{padding-left:24px}li{margin:6px 0}.flow{background:var(--soft);border:1px solid #d8e8df;border-radius:14px;padding:18px;overflow-wrap:anywhere}
+footer{border-top:1px solid var(--line);padding:22px;color:var(--muted);text-align:center;font-size:13px}
+@media(max-width:680px){.sources{grid-template-columns:1fr}main{margin-top:20px}}
+</style></head>
+<body>
+<header><a href="index.html">← 回到 HTML 教學簡報</a></header>
+<main>
+<div class="eyebrow">PUBLIC KNOWLEDGE BASE / LLM WIKI EXPORT</div>
+<h1>如果文物會說話：AI 智慧博物館</h1>
+<div class="intro">
+<p><b>專題定位</b></p>
+<p>本專題探討如何運用大型語言模型（LLM）與檢索增強生成（RAG），打造一位能根據館方知識回答問題、提供來源並承認知識不足的 AI 博物館導覽員。</p>
+<p>本頁是原始 ChatGPT Space Wiki 的公開閱讀版摘要，整理七篇資料來源、知識整合、術語與設計原則。原始 Space 仍作為編輯與查詢工作區；外部讀者可直接閱讀本頁，不需要 ChatGPT Space 權限。</p>
+</div>
+<h2>一、七篇已整理的資料來源</h2>
+<div class="sources">
+<div class="card"><div class="tag">S01｜ICOM（2022）</div><h3>博物館的任務</h3><p>博物館研究、蒐集、保存、詮釋與展示文化遺產；重視可及性、包容性、倫理與社群參與。</p><a href="https://icom.museum/en/news/icom-approves-a-new-museum-definition/" target="_blank" rel="noopener">閱讀原始來源 ↗</a></div>
+<div class="card"><div class="tag">S02｜Lewis et al.（2020）</div><h3>RAG 的研究起點</h3><p>RAG 將生成模型的參數化記憶與外部可檢索記憶結合。</p><a href="https://arxiv.org/abs/2005.11401" target="_blank" rel="noopener">閱讀原始論文 ↗</a></div>
+<div class="card"><div class="tag">S03｜Google Cloud</div><h3>RAG 實務原理</h3><p>涵蓋檢索、前處理、生成、向量資料庫、混合搜尋與重排序；檢索不相關會導致有根據卻離題的回答。</p><a href="https://cloud.google.com/use-cases/retrieval-augmented-generation" target="_blank" rel="noopener">閱讀原始來源 ↗</a></div>
+<div class="card"><div class="tag">S04｜Google Cloud Architecture</div><h3>RAG 系統架構</h3><p>Embedding subsystem 負責資料匯入、向量化與儲存；Serving subsystem 負責使用者請求、推論與負責任 AI 服務。</p><a href="https://docs.cloud.google.com/architecture/rag-capable-gen-ai-app-using-gke" target="_blank" rel="noopener">閱讀原始來源 ↗</a></div>
+<div class="card"><div class="tag">S05｜NIST AI 600-1（2024）</div><h3>生成式 AI 的幻覺與風險</h3><p>將 confabulation 描述為以有把握語氣呈現錯誤或虛假內容；生成式 AI 需要跨生命週期風險管理。</p><a href="https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence" target="_blank" rel="noopener">閱讀原始來源 ↗</a></div>
+<div class="card"><div class="tag">S06｜UNESCO（2021）</div><h3>AI 與文化資產倫理</h3><p>AI 倫理涉及人權、文化多樣性、透明與參與；建議以適當方式運用 AI 於文化遺產與博物館知識庫。</p><a href="https://www.unesco.org/en/legal-affairs/recommendation-ethics-artificial-intelligence" target="_blank" rel="noopener">閱讀原始來源 ↗</a></div>
+<div class="card"><div class="tag">S07｜Tue et al.（2026）</div><h3>對話式博物館導覽研究</h3><p>22 位訪客的探索性研究，評估 LLM 對話式博物館導覽；摘要指出個人化資訊受到肯定，同時也有資訊缺口、提問方式與公共語音互動等挑戰。</p><a href="https://www.sciencedirect.com/science/article/pii/S2212054826000925" target="_blank" rel="noopener">閱讀原始來源 ↗</a></div>
+</div>
+<h2>二、知識整合</h2>
+<div class="intro"><p>AI 智慧博物館導覽是一種以館方核可資料為知識來源、透過 RAG 協助觀眾理解藏品，並以來源追溯、風險檢查與人工治理維持可信度的互動服務。</p></div>
+<h3>系統中的五個角色</h3>
+<ul>
+<li><b>知識庫：</b>藏品紀錄、年代、材質、來源、研究說明、展覽文字。</li>
+<li><b>Retriever：</b>依問題檢索相關段落。</li>
+<li><b>LLM Generator：</b>將資料轉成適合觀眾理解的回答。</li>
+<li><b>Verifier：</b>檢查答案是否有來源支持、是否離題或過度推論。</li>
+<li><b>Human curator：</b>覆核爭議、敏感或重要內容。</li>
+</ul>
+<h2>三、新手術語</h2>
+<div class="card">
+<ul>
+<li><b>LLM：</b>大型語言模型，根據上下文生成文字。</li>
+<li><b>RAG：</b>先從外部知識來源檢索，再交給 LLM 生成。</li>
+<li><b>Embedding：</b>把內容轉成數值向量，以利相似度搜尋。</li>
+<li><b>Vector Database：</b>保存向量與中繼資料的資料庫。</li>
+<li><b>Chunk：</b>為檢索而切分的文件片段。</li>
+<li><b>Retriever：</b>檢索器。</li>
+<li><b>Reranker：</b>重排序器。</li>
+<li><b>Grounding：</b>依據外部證據生成。</li>
+<li><b>Hallucination / Confabulation：</b>模型生成看似可信但錯誤、無根據或矛盾的內容。</li>
+<li><b>Provenance：</b>內容的來源與版本脈絡。</li>
+</ul>
+</div>
+<h2>四、設計原則</h2>
+<ol>
+<li>重要事實要能回指館方紀錄或可信來源。</li>
+<li>來源不足時明確回答資料不足，不補寫想像中的史實。</li>
+<li>把確定事實、研究推測與創意敘事分開標示。</li>
+<li>檢查檢索結果與生成答案，不把 RAG 當成零幻覺保證。</li>
+<li>尊重文化多樣性、社群參與與資料權利。</li>
+</ol>
+<h2>五、實際 Wiki 查詢紀錄</h2>
+<div class="intro">
+<p><b>測試問題：</b>如果博物館 AI 導覽員找不到文物用途的可靠資料，應該如何回答參觀者？請根據 Wiki 的資料回答，並列出參考來源。</p>
+<p><b>測試結果：</b>AI 明確承認資料不足，不自行推測或編造；只回答有來源支持的資訊，區分事實與推測，提供館藏紀錄或研究來源，必要時建議詢問館員／策展人。</p>
+<p><b>回答列出的 Wiki 來源：</b>K01、S03、S05、S06、S07。</p>
+<p><b>檢查結果：</b>通過。回答符合資料不足時標示未知、檢查檢索相關性、避免幻覺及必要時人工覆核等原則。此紀錄依實際查詢回答與使用者提供的畫面截圖整理。</p>
+</div>
+<h2>六、Loop / Graph 摘要</h2>
+<div class="flow"><b>取得資料 → 清理與分類 → 查詢 Wiki → Claim Ledger（主張與來源核對）→ 產生教學大綱與 HTML → QA Gate → 輸出</b><p>若來源不足或主張無法驗證，回到查詢／證據整理；若教學表達不清楚，回到大綱；若 HTML 功能異常，修正受影響頁面後重新檢查。</p></div>
+</main>
+<footer>公開版 Wiki 摘要｜如果文物會說話：AI 智慧博物館</footer>
+</body></html>

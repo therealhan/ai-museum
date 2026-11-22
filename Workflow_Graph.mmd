@@ -1,0 +1,12 @@
+flowchart TD
+    A[取得資料 / Ingest] --> B[清理、切塊、摘要 / Normalize]
+    B --> C[查詢 LLM Wiki / Query]
+    C --> D[建立 Claim Ledger<br/>主張—來源—限制]
+    D --> E[安排教學大綱]
+    E --> F[產生 HTML 簡報]
+    F --> G{QA Gate：來源、事實、教學、功能}
+    G -->|通過| H[輸出與繳交]
+    G -->|來源不足| C
+    G -->|主張無證據| D
+    G -->|表達不清楚| E
+    G -->|HTML 功能錯誤| F
